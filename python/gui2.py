@@ -13,13 +13,16 @@ fullscreen = False
 
 ######################################################
 class SampleApp(tk.Tk):
+    
     def __init__(self):
         global time_dfont
         global button_dfont
-        
+        global dtime
         root = tk.Tk.__init__(self)
-        time_dfont = tkFont.Font(family='Courier New', size=font_size)
+        time_dfont = tkFont.Font(family='Courier New', size=font_size, weight=tkFont.BOLD)
         button_dfont = tkFont.Font(size=font_size)
+        dtime = tk.StringVar()
+        #self.update
         self.geometry = ('1700x1700')
         self._frame = None
         self.switch_frame(StartPage)
@@ -59,11 +62,11 @@ class SampleApp(tk.Tk):
         time_dfont.configure(size=new_size)
         new_size = -max(12, int((self._frame.winfo_height() / 8)))
         button_dfont.configure(size=new_size)
+        
     
     # Read values from the sensors at regular intervals
     def update(self):
         global dtime
-        dtime = tk.StringVar()
         
         # Get local time
         local_time = time.localtime()
@@ -113,14 +116,22 @@ class pharmframe(tk.Frame):
     global button_dfont
     def __init__(self, master):
         pharm = tk.Frame.__init__(self, master)
-        tk.Label(self, font=time_dfont,text="Pharmacist Mode",highlightthickness=0).grid(row=0, sticky=tk.E)
+        tk.Label(self, font=time_dfont,text="Pharmacist Mode",highlightthickness=0).grid(row=0, columnspan = 2,sticky=tk.E)
         tk.Button(self, text="Return to start page", font=button_dfont,highlightthickness=0,
-                  command=lambda: master.switch_frame(StartPage)).grid(row=1, sticky=tk.W+tk.E)
+                  command=lambda: master.switch_frame(StartPage)).grid(row=4, columnspan = 2, sticky=tk.W+tk.E)
+        pname = tk.Entry(self, font =('Courier New', 16)).grid(row=1, column = 1, sticky=tk.W+tk.E)
+        tk.Label(self, text="Patient Name", font =('Courier New', 16)).grid(row=1, column = 0, sticky=tk.W+tk.E)
+        pname = tk.Entry(self, font =('Courier New', 16)).grid(row=2, column = 1, sticky=tk.W+tk.E)
+        tk.Label(self, text="Prescription Info", font =('Courier New', 16)).grid(row=2, column = 0, sticky=tk.W+tk.E)
+        pname = tk.Entry(self, font =('Courier New', 16)).grid(row=3, column = 1, sticky=tk.W+tk.E)
+        tk.Label(self, text="Dosage Info", font =('Courier New', 16)).grid(row=3, column = 0, sticky=tk.W+tk.E)
+
 
 class userframe(tk.Frame):
     def __init__(self, master):
         global time_dfont
         global button_dfont
+        global dtime
         homeuser = tk.Frame.__init__(self, master)
         dtime = tk.StringVar()
         
@@ -147,8 +158,7 @@ class userframe(tk.Frame):
                         textvariable=dtime, 
                         font=time_dfont,
                         highlightthickness=0,
-                        fg='red', 
-                        bg='black')
+                        fg='black')
         
         label_time.grid(row=1, column=0,columnspan=2, padx=0, pady=20)
         button_quit.grid(row=2, column=1, padx=5, pady=5, sticky=tk.W+tk.E)
@@ -161,5 +171,6 @@ class userframe(tk.Frame):
 
 if __name__ == "__main__":
     app = SampleApp()
+    app.update()
     app.toggle_fullscreen()
     app.mainloop()
